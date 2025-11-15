@@ -6,11 +6,6 @@ With this mod you can toggle each critter's appearance from normal to its bing-b
 
 It overrides the bugphobia setting of Peak, and can be changed even when in-game.
 
-<br>
-
-**Currently works for the critters in the Roots and Mesa biomes - we're waiting for the Tropics to come back and will update the mod accordingly.**
-
-
 ## How to manually install
 
 1. Download and install **[BepinEx](https://thunderstore.io/c/peak/p/BepInEx/BepInExPack_PEAK/)**
