@@ -13,7 +13,8 @@ public partial class Plugin : BaseUnityPlugin
 {
     internal static ManualLogSource Log { get; private set; } = null!;
 
-    private List<Type> mobList = [typeof(Spider), typeof(Scorpion), typeof(Antlion), typeof(Beetle)];
+    private List<Type> mobList = [typeof(Spider), typeof(Scorpion), typeof(Antlion), typeof(Beetle), 
+        typeof(Bugfix), typeof(BeeSwarm)];
     
     public static Dictionary<string, ConfigEntry<bool>> bugPhobiaMap = new();
     
@@ -23,7 +24,8 @@ public partial class Plugin : BaseUnityPlugin
 
         foreach (var mob in mobList)
         {
-            var configEntry = Config.Bind("General", mob.Name, false, "BingBong?");
+            var configEntry = Config.Bind("General", mob.Name, false, 
+                "Toggle the Spiders appearance. false = normal appearance, true = Bing Bong");
             configEntry.SettingChanged += OnSettingChanged;
             bugPhobiaMap.Add(mob.Name, configEntry);
         }
