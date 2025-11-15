@@ -7,7 +7,7 @@ repository = "https://thunderstore.io"
 [package]
 namespace = "StarAppeal"
 name = "BetterBugphobia"
-description = "Individually toggle each bug to be BING BONG"
+description = "Individually toggle each critter's appearance from normal to its bing-bong-ified version"
 websiteUrl = "https://github.com/StarAppeal/Peak-BetterBugphobia"
 containsNsfwContent = false
 
