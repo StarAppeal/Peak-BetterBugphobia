@@ -1,2 +1,27 @@
-# Peak-BetterBugphobia
-A Peak mod for better bugphobia settings 
+# Better Bugphobia
+
+*Afraid of spiders, but you'd prefer the other creepy crawlies to look normal and not be replaced with their Bing Bong cousins?*
+
+With this mod you can toggle each critter's appearance from normal to its bing-bong-ified version!
+
+It overrides the bugphobia setting of Peak, and can be changed even when in-game.
+
+<br>
+
+**Currently works for the critters in the Roots and Mesa biomes - we're waiting for the Tropics to come back and will update the mod accordingly.**
+
+
+## How to manually install
+
+1. Download and install **[BepinEx](https://thunderstore.io/c/peak/p/BepInEx/BepInExPack_PEAK/)**
+2. Download **Better Bugphobia**
+3. Extract the zip and copy the contents from the `plugins` folder into `...\PEAK\BepInEx\plugins`
+4. Run the game to install the mod
+5. Edit the **Better Bugphobia** config  in `...\PEAK\BepInEx\config` to your liking
+
+<br>
+
+***Alternatively***, you can use **[ModConfig](https://thunderstore.io/c/peak/p/PEAKModding/ModConfig/)** to easily change the settings of the **BetterBugphobia** mod in-game!
+
+<img src="https://starappeal.app/bugunlimited.gif"/>
+
