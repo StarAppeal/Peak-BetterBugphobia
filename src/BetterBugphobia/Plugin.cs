@@ -13,8 +13,14 @@ public partial class Plugin : BaseUnityPlugin
 {
     internal static ManualLogSource Log { get; private set; } = null!;
 
-    private List<Type> mobList = [typeof(Spider), typeof(Scorpion), typeof(Antlion), typeof(Beetle), 
-        typeof(Bugfix), typeof(BeeSwarm)];
+    private List<Setting> mobList = [
+        new() {MobType = typeof(Spider), SettingName = "Spider"},
+        new () {MobType = typeof(Scorpion), SettingName = "Scorpion"},
+         new() {MobType = typeof(Antlion), SettingName = "Antlion"},
+        new () {MobType = typeof(Beetle), SettingName = "Beetle"}, 
+        new() {MobType = typeof(Bugfix), SettingName = "Tick"},
+        new () {MobType = typeof(BeeSwarm), SettingName = "Bees"},
+    ];
     
     public static Dictionary<string, ConfigEntry<bool>> bugPhobiaMap = new();
     
@@ -24,10 +30,10 @@ public partial class Plugin : BaseUnityPlugin
 
         foreach (var mob in mobList)
         {
-            var configEntry = Config.Bind("General", mob.Name, false, 
-                $"Toggle the {mob.Name}s appearance. false = normal appearance, true = Bing Bong");
+            var configEntry = Config.Bind("General", mob.SettingName, false, 
+                $"Toggle the {mob.SettingName}s appearance. false = normal appearance, true = Bing Bong");
             configEntry.SettingChanged += OnSettingChanged;
-            bugPhobiaMap.Add(mob.Name, configEntry);
+            bugPhobiaMap.Add(mob.MobType.Name, configEntry);
         }
 
         Harmony.CreateAndPatchAll(typeof(Plugin).Assembly);
@@ -45,13 +51,13 @@ public partial class Plugin : BaseUnityPlugin
     {
         foreach (var mobType in mobList)
         {
-            foreach (var mob in FindObjectsOfType(mobType))
+            foreach (var mob in FindObjectsOfType(mobType.MobType))
             {
                 var monsterComponent = mob as MonoBehaviour; 
                 if (monsterComponent == null) continue;
                 if (monsterComponent.TryGetComponent<BugPhobia>(out var bugPhobiaComponent))
                 {
-                    ApplyBugphobia(bugPhobiaComponent, mobType.Name);
+                    ApplyBugphobia(bugPhobiaComponent, mobType.MobType.Name);
                 }
             }
         }
@@ -65,3 +71,8 @@ public partial class Plugin : BaseUnityPlugin
     }
 }
 
+public struct Setting
+{
+    public Type MobType;
+    public string SettingName;
+}
