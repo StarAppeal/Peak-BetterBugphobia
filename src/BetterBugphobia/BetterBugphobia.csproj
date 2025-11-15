@@ -7,10 +7,6 @@
     <Version>1.0.2</Version>
   </PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="PEAKGameLibs" Version="1.0.1" />
-  </ItemGroup>
-
   <!--
   How to include thunderstore mods as dependencies via nuget
 
