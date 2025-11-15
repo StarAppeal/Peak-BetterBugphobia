@@ -23,5 +23,5 @@ It overrides the bugphobia setting of Peak, and can be changed even when in-game
 
 ***Alternatively***, you can use **[ModConfig](https://thunderstore.io/c/peak/p/PEAKModding/ModConfig/)** to easily change the settings of the **BetterBugphobia** mod in-game!
 
-<img src="https://starappeal.app/bugunlimited.gif"/>
+![The mod's settings are edited to change the beetles' appearances.](https://starappeal.app/betterbugphobia.gif)
 
