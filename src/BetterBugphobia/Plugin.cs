@@ -25,7 +25,7 @@ public partial class Plugin : BaseUnityPlugin
         foreach (var mob in mobList)
         {
             var configEntry = Config.Bind("General", mob.Name, false, 
-                "Toggle the Spiders appearance. false = normal appearance, true = Bing Bong");
+                $"Toggle the {mob.Name}s appearance. false = normal appearance, true = Bing Bong");
             configEntry.SettingChanged += OnSettingChanged;
             bugPhobiaMap.Add(mob.Name, configEntry);
         }
