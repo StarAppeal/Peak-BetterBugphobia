@@ -8,7 +8,7 @@ repository = "https://thunderstore.io"
 namespace = "StarAppeal"
 name = "BetterBugphobia"
 description = "Individually toggle each bug to be BING BONG"
-websiteUrl = "" # TODO: Add a link to your mod repository here (optional)
+websiteUrl = "https://github.com/StarAppeal/Peak-BetterBugphobia"
 containsNsfwContent = false
 
 [package.dependencies]
