@@ -1,0 +1,30 @@
+name: Publish to Thunderstore
+
+on:
+  workflow_dispatch:
+  
+  release:
+    types: [published]
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '9.x' 
+
+      - name: Restore
+        run: |
+          dotnet restore --locked-mode
+          dotnet tool restore
+
+      - name: Pack and Publish Thunderstore
+        env:
+          TCLI_AUTH_TOKEN: ${{ secrets.TCLI_AUTH_TOKEN }}
+        run: dotnet pack -c Release --no-restore -property:PublishTS=true -v d
