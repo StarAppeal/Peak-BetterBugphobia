@@ -16,7 +16,7 @@ public partial class Plugin : BaseUnityPlugin
         new() { MobType = typeof(Antlion), SettingName = "Antlion", OnSettingChanged = [OnSettingChanged] },
         new()
         {
-            MobType = typeof(BeeSwarm), SettingName = "Bees",
+            MobType = typeof(BeeSwarm), SettingName = "Bee",
             OnSettingChanged = [OnSettingChanged, OnBeesSettingChanged]
         },
         new() { MobType = typeof(Beetle), SettingName = "Beetle", OnSettingChanged = [OnSettingChanged] },
