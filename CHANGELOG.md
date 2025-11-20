@@ -1,4 +1,7 @@
 # Changelog
+## [v1.0.5] - 2025-11-20
+### Change
+- Config
 ## [v1.0.4] - 2025-11-20
 ### Fixed
 - Bees toggle
