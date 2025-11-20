@@ -4,6 +4,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 17.5.002.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{5C123AC3-ACF6-48C8-B344-3907B42C7B69}"
+	ProjectSection(SolutionItems) = preProject
+		src\.env = src\.env
+	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BetterBugphobia", "src\BetterBugphobia\BetterBugphobia.csproj", "{E69F6D87-9F83-4108-8E24-58FE8F482BF0}"
 EndProject

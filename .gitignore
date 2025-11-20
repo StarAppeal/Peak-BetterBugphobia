@@ -60,3 +60,5 @@ nunit-*.xml
 *.DotSettings
 *.user
 Config.Build.user.props
+
+.env
