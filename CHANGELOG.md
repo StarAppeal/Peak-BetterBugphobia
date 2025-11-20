@@ -1,4 +1,7 @@
 # Changelog
+## [v1.0.4] - 2025-11-20
+### Fixed
+- Bees toggle
 ## [v1.0.3] - 2025-11-15
 ### Changed
 - Config shows correct names for mobs
