@@ -11,18 +11,17 @@ namespace BetterBugphobia;
 [BepInAutoPlugin]
 public partial class Plugin : BaseUnityPlugin
 {
-    private static List<Setting> mobList =
+    public static List<Setting> mobList =
     [
-        new() { MobType = typeof(Antlion), SettingName = "Antlion", OnSettingChanged = [OnSettingChanged] },
-        new()
+        new(typeof(Antlion), "Antlion"),
+        new(typeof(BeeSwarm), "Bee")
         {
-            MobType = typeof(BeeSwarm), SettingName = "Bee",
-            OnSettingChanged = [OnSettingChanged, OnBeesSettingChanged]
+            AdditionalOnSettingChanged = [OnBeesSettingChanged]
         },
-        new() { MobType = typeof(Beetle), SettingName = "Beetle", OnSettingChanged = [OnSettingChanged] },
-        new() { MobType = typeof(Scorpion), SettingName = "Scorpion", OnSettingChanged = [OnSettingChanged] },
-        new() { MobType = typeof(Spider), SettingName = "Spider", OnSettingChanged = [OnSettingChanged] },
-        new() { MobType = typeof(Bugfix), SettingName = "Tick", OnSettingChanged = [OnSettingChanged] }
+        new(typeof(Beetle), "Beetle"),
+        new(typeof(Scorpion), "Scorpion"),
+        new(typeof(Spider), "Spider"),
+        new(typeof(Bugfix), "Tick")
     ];
 
     internal static ManualLogSource Log { get; private set; } = null!;
@@ -30,6 +29,9 @@ public partial class Plugin : BaseUnityPlugin
     public static Dictionary<string, ConfigEntry<bool>> bugPhobiaMap = new();
 
     public static Material? OriginalBeeSwarmMaterial;
+    
+    public static HashSet<Type> MonsterTypesHashSet { get; private set; } = [..mobList.ConvertAll(mob => mob.MobType)];
+
 
     private void Awake()
     {
@@ -39,10 +41,28 @@ public partial class Plugin : BaseUnityPlugin
         {
             var configEntry = Config.Bind("General", mob.SettingName, false,
                 $"Toggle the {mob.SettingName}s appearance. false = normal appearance, true = Bing Bong");
-            foreach (var onSettingChanged in mob.OnSettingChanged)
+            foreach (var onSettingChanged in mob.AdditionalOnSettingChanged)
             {
-                configEntry.SettingChanged += onSettingChanged;
+                configEntry.SettingChanged -= onSettingChanged;
             }
+
+            // add default onSettingChanged event handler
+            configEntry.SettingChanged += (_, _) =>
+            {
+                var mobType = mob.MobType;
+
+                foreach (var mobObject in MonsterCache.GetActiveMobs(mobType))
+                {
+                    var monsterComponent = mobObject as MonoBehaviour;
+                    if (monsterComponent == null) continue;
+                    if (monsterComponent.TryGetComponent<BugPhobia>(out var bugPhobiaComponent))
+                    {
+                        if (!bugPhobiaMap.TryGetValue(mobType.Name, out var config)) return;
+                        foreach (var go in bugPhobiaComponent.defaultGameObjects) go.SetActive(!config.Value);
+                        foreach (var go in bugPhobiaComponent.bugPhobiaGameObjects) go.SetActive(config.Value);
+                    }
+                }
+            };
 
             bugPhobiaMap.Add(mob.MobType.Name, configEntry);
         }
@@ -52,43 +72,15 @@ public partial class Plugin : BaseUnityPlugin
         Log.LogInfo($"Plugin {Name} is loaded!");
     }
 
-    private static void OnSettingChanged(object? sender, EventArgs e)
-    {
-        Log.LogInfo("Setting Changed!");
-        ApplyAllBugphobiaSettings();
-    }
-
-    private static void ApplyAllBugphobiaSettings()
-    {
-        foreach (var mobType in mobList)
-        {
-            foreach (var mob in FindObjectsOfType(mobType.MobType))
-            {
-                var monsterComponent = mob as MonoBehaviour;
-                if (monsterComponent == null) continue;
-                if (monsterComponent.TryGetComponent<BugPhobia>(out var bugPhobiaComponent))
-                {
-                    ApplyBugphobia(bugPhobiaComponent, mobType.MobType.Name);
-                }
-            }
-        }
-    }
-
-    public static void ApplyBugphobia(BugPhobia bugPhobiaComponent, string monsterName)
-    {
-        if (!bugPhobiaMap.TryGetValue(monsterName, out var configEntry)) return;
-        foreach (var go in bugPhobiaComponent.defaultGameObjects) go.SetActive(!configEntry.Value);
-        foreach (var go in bugPhobiaComponent.bugPhobiaGameObjects) go.SetActive(configEntry.Value);
-    }
-
     private static void OnBeesSettingChanged(object? sender, EventArgs e)
     {
-        foreach (var beeSwarm in FindObjectsOfType<BeeSwarm>()) ApplyBeeSwarmSettings(beeSwarm);
+        foreach (var beeSwarm in MonsterCache.GetActiveMobs(typeof(BeeSwarm)))
+            ApplyBeeSwarmSettings((BeeSwarm)beeSwarm);
     }
 
     public static void ApplyBeeSwarmSettings(BeeSwarm beeSwarm)
     {
-        if (!bugPhobiaMap.TryGetValue("BeeSwarm", out var configEntry)) return;
+        if (!bugPhobiaMap.TryGetValue(nameof(BeeSwarm), out var configEntry)) return;
         {
             if (configEntry.Value)
             {
@@ -104,11 +96,17 @@ public partial class Plugin : BaseUnityPlugin
             }
         }
     }
-}
 
-public struct Setting
-{
-    public Type MobType;
-    public string SettingName;
-    public List<EventHandler> OnSettingChanged;
+    public class Setting
+    {
+        public Type MobType { get; }
+        public string SettingName { get; }
+        public List<EventHandler> AdditionalOnSettingChanged { get; set; } = [];
+
+        public Setting(Type mobType, string settingName)
+        {
+            MobType = mobType;
+            SettingName = settingName;
+        }
+    }
 }

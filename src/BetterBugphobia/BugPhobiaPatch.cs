@@ -1,46 +1,31 @@
-﻿using System.Collections.Generic;
-using HarmonyLib;
-using UnityEngine;
+﻿using HarmonyLib;
 
 namespace BetterBugphobia;
 
 [HarmonyPatch(typeof(BugPhobia), "Start")]
 public class BugPhobiaPatch
 {
-    private static readonly Dictionary<string, string> MonsterTypeCache = new();
-
-    [HarmonyPostfix]
-    static void Postfix(BugPhobia __instance)
+    [HarmonyPrefix]
+    static bool Prefix(BugPhobia __instance)
     {
-        string gameObjectName = __instance.gameObject.name;
-
-        if (MonsterTypeCache.TryGetValue(gameObjectName, out var monsterName))
+        foreach (var monsterObject in __instance.defaultGameObjects)
         {
-            Plugin.Log.LogInfo($"[BetterBugphobia] Cache Hit: {monsterName}");
-        }
-        else
-        {
-            var allComponents = __instance.gameObject.GetComponents<MonoBehaviour>();
-            foreach (var component in allComponents)
-            {
-                var componentName = component.GetType().Name;
-                if (!Plugin.bugPhobiaMap.ContainsKey(componentName)) continue;
-                monsterName = componentName;
-                break;
-            }
-
-            if (monsterName != null)
-            {
-                MonsterTypeCache[gameObjectName] = monsterName;
-            }
+            var monsterName = monsterObject.GetType().Name;
+            if (!Plugin.bugPhobiaMap.TryGetValue(monsterName, out var configEntry)) continue;
+            
+            monsterObject.SetActive(!configEntry.Value);
         }
 
-        Plugin.Log.LogInfo($"[BetterBugphobia] Patching {monsterName}");
+        foreach (var monsterObject in __instance.bugPhobiaGameObjects)
+        {
+            var monsterName = monsterObject.GetType().Name;
+            if (!Plugin.bugPhobiaMap.TryGetValue(monsterName, out var configEntry)) continue;
+            
+            monsterObject.SetActive(configEntry.Value);
+        }
         
-        if (monsterName == null) return;
+        Plugin.Log.LogInfo($"[BetterBugphobia] Patch finished");
         
-        Plugin.ApplyBugphobia(__instance, monsterName);
-        
-        Plugin.Log.LogInfo($"[BetterBugphobia] Patch finished for {monsterName}");
+        return false; 
     }
 }
