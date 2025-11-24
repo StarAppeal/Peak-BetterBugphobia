@@ -1,5 +1,5 @@
 # Changelog
-## [v1.1] - 2025-11-24
+## [v1.1.0] - 2025-11-24
 ### Fixed
 - Tick and Scorpion behaviour as items
 - Bee particles
