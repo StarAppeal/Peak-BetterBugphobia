@@ -1,4 +1,7 @@
 # Changelog
+## [v1.1.1] - 2025-12-19
+### Changed
+- Readme
 ## [v1.1.0] - 2025-11-24
 ### Fixed
 - Tick and Scorpion behaviour as items
